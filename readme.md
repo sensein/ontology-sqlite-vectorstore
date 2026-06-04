@@ -78,7 +78,21 @@ unzip .cache/embeddings/embed_indexes.zip -d .cache/
 unzip .cache/embeddings/ontology_indexes-20260310T133457Z-3-001.zip -d .cache/
 ```
 
-### 2. Choose Your Execution Method
+### 2. Configure Environment
+
+Copy the example environment file:
+
+```bash
+cp env.example .env
+```
+
+If you downloaded the data into a directory other than `.cache`, update `CACHE_ROOT` in your `.env`:
+
+```bash
+CACHE_ROOT=your-directory-name
+```
+
+### 3. Choose Your Execution Method
 
 #### Option A: Docker Deployment (Recommended)
 
