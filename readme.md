@@ -52,32 +52,41 @@ Based on our evaluation (to be published in a forthcoming paper), a single LLM-b
 
 ## ⚡ Quick Start
 
-### 1. Install dependencies
+### 1. Download Data
+
+You must download the Ontology DB, indexes, and embeddings and place them into a `.cache/` directory.
+
+The easiest way to do this is using Git (requires [Git LFS](https://git-lfs.com)):
+
+```bash
+git clone https://huggingface.co/datasets/sensein/ontology-sqlite-vectorstore .cache
+```
+
+Alternatively, if you have the `huggingface_hub` Python package installed, you can use the CLI:
+
+```bash
+hf download sensein/ontology-sqlite-vectorstore --repo-type dataset --local-dir .cache
+```
+
+> **Note:** The directory does not have to be named `.cache` — use any name you like. Just make sure to update the environment variables accordingly to point to the correct location. If the app doesn't find the indexes, it will run the pipeline to generate them. This is very time-consuming and can take days depending on your system.
+
+### 2. Choose Your Execution Method
+
+#### Option A: Docker Deployment (Recommended)
+
+This will automatically install dependencies and start the server in a container.
+
+```bash
+docker compose up
+```
+
+#### Option B: Local Deployment
+
+If you prefer to run the server directly on your machine without Docker, install the dependencies and run the Uvicorn server:
 
 ```bash
 pip install -r requirements.txt
-```
-
-### 2. Download data
-
-- Ontology DB + indexes + embeddings:
-https://huggingface.co/datasets/sensein/ontology-sqlite-vectorstore
-
-Place into:
-```
-.cache/
-``` 
-Note: It does not have to be `.cache`, it can be any name. Just make sure to update the environment variables accordingly to point to the correct location. If it doesn't find the indexes, then it will run the pipeline to generate indexes + embeddings, which is very time consuming and depending on your system, can take up to days or more.
-
-### 3. Run server
-
-```bash
 python -m uvicorn main:app --reload --port 8000
-```
-
-### 4. Docker Deployment
-```bash
-docker compose up
 ```
 
 ---
