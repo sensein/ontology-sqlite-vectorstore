@@ -3,7 +3,6 @@
 .gitignore
 
 # Large data files — mounted at runtime
-bioportal.db
 indexes_embedding/
 *.db
 
@@ -11,7 +10,7 @@ indexes_embedding/
 __pycache__/
 *.pyc
 *.pyo
-.cache/
+.ontology/
 *.egg-info/
 
 # Logs
