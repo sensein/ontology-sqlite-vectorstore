@@ -99,6 +99,12 @@ If you downloaded the data into a directory other than `.ontology`, update `CACH
 CACHE_ROOT=your-directory-name
 ```
 
+Also add that directory to `.gitignore` to avoid accidentally committing large data files, and to ensure Docker does not copy it into the image during `docker compose up`:
+
+```bash
+echo "your-directory-name/" >> .gitignore
+```
+
 ### 4. Choose Your Execution Method
 
 #### Option A: Docker Deployment (Recommended)
@@ -106,7 +112,7 @@ CACHE_ROOT=your-directory-name
 This will automatically install dependencies and start the server in a container.
 
 ```bash
-docker compose up
+docker compose up --build
 ```
 
 #### Option B: Local Deployment

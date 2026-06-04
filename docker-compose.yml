@@ -18,10 +18,11 @@ services:
       # Mount cache for model persistence
       - ${CACHE_ROOT:-./.ontology}:/app/.cache    # Docker will auto create ${CACHE_ROOT} if it does not exist
     environment:
-      # Cache Env 
+      # Cache Env
       - BM25_CACHE_DIR=${BM25_CACHE_DIR}
       - INDEX_CACHE_DIR=${INDEX_CACHE_DIR}
       - EMBED_CACHE_DIR=${EMBED_CACHE_DIR}
+      - DATABASE_PATH=/app/bioportal.db
 
       # API Configuration
       - API_HOST=0.0.0.0
