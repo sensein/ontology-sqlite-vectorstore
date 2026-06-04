@@ -70,6 +70,14 @@ hf download sensein/ontology-sqlite-vectorstore --repo-type dataset --local-dir 
 
 > **Note:** The directory does not have to be named `.cache` — use any name you like. Just make sure to update the environment variables accordingly to point to the correct location. If the app doesn't find the indexes, it will run the pipeline to generate them. This is very time-consuming and can take days depending on your system.
 
+Once downloaded, unzip the index files from the `embeddings/` subdirectory into your cache directory:
+
+```bash
+unzip .cache/embeddings/bm25_indexes-20260310T132934Z-3-001.zip -d .cache/
+unzip .cache/embeddings/embed_indexes.zip -d .cache/
+unzip .cache/embeddings/ontology_indexes-20260310T133457Z-3-001.zip -d .cache/
+```
+
 ### 2. Choose Your Execution Method
 
 #### Option A: Docker Deployment (Recommended)
