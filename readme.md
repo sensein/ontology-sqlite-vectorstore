@@ -52,7 +52,14 @@ Based on our evaluation (to be published in a forthcoming paper), a single LLM-b
 
 ## ⚡ Quick Start
 
-### 1. Download Data
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/sensein/search_hybrid.git
+cd search_hybrid
+```
+
+### 2. Download Data
 
 You must download the Ontology DB, indexes, and embeddings and place them into a `.ontology/` directory.
 
@@ -78,7 +85,7 @@ unzip .ontology/embeddings/embed_indexes.zip -d .ontology/
 unzip .ontology/embeddings/ontology_indexes-20260310T133457Z-3-001.zip -d .ontology/
 ```
 
-### 2. Configure Environment
+### 3. Configure Environment
 
 Copy the example environment file:
 
@@ -92,7 +99,7 @@ If you downloaded the data into a directory other than `.ontology`, update `CACH
 CACHE_ROOT=your-directory-name
 ```
 
-### 3. Choose Your Execution Method
+### 4. Choose Your Execution Method
 
 #### Option A: Docker Deployment (Recommended)
 
