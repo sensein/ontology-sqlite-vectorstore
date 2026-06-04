@@ -204,7 +204,7 @@ async def lifespan(app: FastAPI):
     try:
         # Initialize database
         global db, retriever, reranker, _indexing_complete
-        db = OntologyDB(db_path=os.getenv("DATABASE_PATH", "bioportal.db"))
+        db = OntologyDB(db_path=os.getenv("DATABASE_PATH", "./.ontology/bioportal.db"))
         
         # Log database stats
         stats = db.get_stats()
