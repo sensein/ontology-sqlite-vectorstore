@@ -9,7 +9,6 @@ logs/
 build/
 .env
 .vscode/
-bioportal.db
-.cache/
+.ontology/
 .venv/
 tests/.venv/

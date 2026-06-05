@@ -52,32 +52,76 @@ Based on our evaluation (to be published in a forthcoming paper), a single LLM-b
 
 ## ⚡ Quick Start
 
-### 1. Install dependencies
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/sensein/search_hybrid.git
+cd search_hybrid
+```
+
+### 2. Download Data
+
+You must download the Ontology DB, indexes, and embeddings and place them into a `.ontology/` directory.
+
+The easiest way to do this is using Git (requires [Git LFS](https://git-lfs.com)):
+
+```bash
+git clone https://huggingface.co/datasets/sensein/ontology-sqlite-vectorstore .ontology
+```
+
+Alternatively, if you have the `huggingface_hub` Python package installed, you can use the CLI:
+
+```bash
+hf download sensein/ontology-sqlite-vectorstore --repo-type dataset --local-dir .ontology
+```
+
+> **Note:** The directory does not have to be named `.ontology` — use any name you like. Just make sure to update the environment variables accordingly to point to the correct location. If the app doesn't find the indexes, it will run the pipeline to generate them. This is very time-consuming and can take days depending on your system.
+
+Once downloaded, unzip the index files from the `embeddings/` subdirectory into your cache directory:
+
+```bash
+unzip .ontology/embeddings/bm25_indexes-20260310T132934Z-3-001.zip -d .ontology/
+unzip .ontology/embeddings/embed_indexes.zip -d .ontology/
+unzip .ontology/embeddings/ontology_indexes-20260310T133457Z-3-001.zip -d .ontology/
+```
+
+### 3. Configure Environment
+
+Copy the example environment file:
+
+```bash
+cp env.example .env
+```
+
+If you downloaded the data into a directory other than `.ontology`, update `CACHE_ROOT` in your `.env`:
+
+```bash
+CACHE_ROOT=your-directory-name
+```
+
+Also add that directory to `.gitignore` to avoid accidentally committing large data files, and to ensure Docker does not copy it into the image during `docker compose up`:
+
+```bash
+echo "your-directory-name/" >> .gitignore
+```
+
+### 4. Choose Your Execution Method
+
+#### Option A: Docker Deployment (Recommended)
+
+This will automatically install dependencies and start the server in a container.
+
+```bash
+docker compose up --build
+```
+
+#### Option B: Local Deployment
+
+If you prefer to run the server directly on your machine without Docker, install the dependencies and run the Uvicorn server:
 
 ```bash
 pip install -r requirements.txt
-```
-
-### 2. Download data
-
-- Ontology DB + indexes + embeddings:
-https://huggingface.co/datasets/sensein/ontology-sqlite-vectorstore
-
-Place into:
-```
-.cache/
-``` 
-Note: It does not have to be `.cache`, it can be any name. Just make sure to update the environment variables accordingly to point to the correct location. If it doesn't find the indexes, then it will run the pipeline to generate indexes + embeddings, which is very time consuming and depending on your system, can take up to days or more.
-
-### 3. Run server
-
-```bash
 python -m uvicorn main:app --reload --port 8000
-```
-
-### 4. Docker Deployment
-```bash
-docker compose up
 ```
 
 ---
@@ -98,9 +142,9 @@ DENSE_WEIGHT=0.7
 EMBEDDING_MODEL=BAAI/bge-small-en-v1.5   # Embedding model (fast, biomedical-friendly)
 
 VECTOR_BACKEND=faiss         # faiss (default) | numpy | chroma
-EMBED_CACHE_DIR=.cache/embed_indexes    # Where .npy and FAISS index are stored
+EMBED_CACHE_DIR=.ontology/embed_indexes    # Where .npy and FAISS index are stored
 BM25_CACHE_DIR=indexes_embedding/bm25_indexes # BM25 index cache directory
-CHROMA_DB_PATH=.cache/chroma_db        # Only used when VECTOR_BACKEND=chroma
+CHROMA_DB_PATH=.ontology/chroma_db        # Only used when VECTOR_BACKEND=chroma
 ```
 
 ### Re-ranking
@@ -158,8 +202,8 @@ LATE_INTERACTION_MODEL=jinaai/jina-colbert-v2
 ```bash
 MAX_CANDIDATES=20            # Candidates retrieved before re-ranking
 MAX_RESULTS=5                # Default max results per query
-INDEX_CACHE_DIR=.cache/ontology_indexes
-EMBED_CACHE_DIR=.cache/embed_indexes
+INDEX_CACHE_DIR=.ontology/ontology_indexes
+EMBED_CACHE_DIR=.ontology/embed_indexes
 DATABASE_PATH=bioportal.db
 ```
 
@@ -189,7 +233,7 @@ DATABASE_PATH=bioportal.db
 
 ## 🏗️ Indexing
 
-Use `build_index.py` to generate all indexes before starting the server. Note, building indexes is very time consuming task. You can download it from [https://huggingface.co/datasets/sensein/ontology-sqlite-vectorstore](https://huggingface.co/datasets/sensein/ontology-sqlite-vectorstore) and place it on `.cache` directory.
+Use `build_index.py` to generate all indexes before starting the server. Note, building indexes is very time consuming task. You can download it from [https://huggingface.co/datasets/sensein/ontology-sqlite-vectorstore](https://huggingface.co/datasets/sensein/ontology-sqlite-vectorstore) and place it on `.ontology` directory.
 
 ```bash
 # Build with default settings (reads from .env)

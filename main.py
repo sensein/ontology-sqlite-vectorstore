@@ -204,7 +204,7 @@ async def lifespan(app: FastAPI):
     try:
         # Initialize database
         global db, retriever, reranker, _indexing_complete
-        db = OntologyDB(db_path="bioportal.db")
+        db = OntologyDB(db_path=os.getenv("DATABASE_PATH", "./.ontology/bioportal.db"))
         
         # Log database stats
         stats = db.get_stats()
@@ -218,7 +218,7 @@ async def lifespan(app: FastAPI):
         bm25_weight = float(os.getenv("BM25_WEIGHT", "0.3"))
         dense_weight = float(os.getenv("DENSE_WEIGHT", "0.7"))
         embedding_model = os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
-        chroma_path = os.getenv("CHROMA_DB_PATH", ".cache/chroma_db")
+        chroma_path = os.getenv("CHROMA_DB_PATH", ".ontology/chroma_db")
 
         # VECTOR_BACKEND controls the dense index backend:
         #   faiss  — recommended for >1M vectors (exact cosine, builds in seconds)
@@ -231,12 +231,12 @@ async def lifespan(app: FastAPI):
         retriever = HybridRetriever(
             bm25_weight=bm25_weight,
             dense_weight=dense_weight,
-            bm25_model=BM25Retriever(cache_dir=os.getenv("BM25_CACHE_DIR", ".cache/bm25_indexes")),
+            bm25_model=BM25Retriever(cache_dir=os.getenv("BM25_CACHE_DIR", ".ontology/bm25_indexes")),
             dense_model=DenseRetriever(
                 model_name=embedding_model,
                 use_chroma=use_chroma,
                 chroma_path=chroma_path,
-                embed_cache_dir=os.getenv("EMBED_CACHE_DIR", ".cache/embed_indexes"),
+                embed_cache_dir=os.getenv("EMBED_CACHE_DIR", ".ontology/embed_indexes"),
                 use_faiss=use_faiss,
             ),
         )
@@ -309,7 +309,7 @@ def _build_indexes():
     import pickle
 
     try:
-        cache_dir = os.getenv("INDEX_CACHE_DIR", ".cache/ontology_indexes")
+        cache_dir = os.getenv("INDEX_CACHE_DIR", ".ontology/ontology_indexes")
         os.makedirs(cache_dir, exist_ok=True)
         concepts_cache_path = os.path.join(cache_dir, "concepts_cache.pkl")
         concepts_meta_path  = os.path.join(cache_dir, "concepts_cache_meta.json")
@@ -977,7 +977,7 @@ async def get_stats():
             indexes={
                 "bm25_indexed": _indexing_complete,
                 "dense_indexed": _indexing_complete,
-                "cache_dir": os.getenv("INDEX_CACHE_DIR", ".cache/ontology_indexes"),
+                "cache_dir": os.getenv("INDEX_CACHE_DIR", ".ontology/ontology_indexes"),
                 "num_indexed_concepts": len(_concepts_map),
             },
             configuration=config,
@@ -1018,8 +1018,8 @@ async def get_config():
             "log_level":  os.getenv("LOG_LEVEL",    "INFO"),
         },
         "cache": {
-            "index_cache_dir": os.getenv("INDEX_CACHE_DIR", ".cache/ontology_indexes"),
-            "embed_cache_dir": os.getenv("EMBED_CACHE_DIR", ".cache/embed_indexes"),
+            "index_cache_dir": os.getenv("INDEX_CACHE_DIR", ".ontology/ontology_indexes"),
+            "embed_cache_dir": os.getenv("EMBED_CACHE_DIR", ".ontology/embed_indexes"),
             "database_path":   os.getenv("DATABASE_PATH",  "bioportal.db"),
         },
         "status": {
