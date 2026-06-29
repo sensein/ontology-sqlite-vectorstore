@@ -1,4 +1,4 @@
-# 🧠 Ontology Concept Mapping Engine
+# 🧠 Semantic Concept Mapper
 
 ![Python](https://img.shields.io/badge/python-3.10+-blue)![License](https://img.shields.io/badge/license-Apache%202.0-green)![Status](https://img.shields.io/badge/status-active-success)![Backend](https://img.shields.io/badge/vector-faiss-orange)
 
