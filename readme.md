@@ -4,6 +4,7 @@
 
 A high-performance **hybrid retrieval + multi-stage re-ranking system** for semantic concept mapping over ontology databases.
 
+ <img width="1254" height="1254" alt="semantic_concept_mapper" src="https://github.com/user-attachments/assets/ed4d6e8e-de63-4357-aad8-34fe7389e6e7" />
 
 ---
 
